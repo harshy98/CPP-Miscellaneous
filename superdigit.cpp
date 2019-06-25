@@ -2,67 +2,61 @@
 
 using namespace std;
 
-int countDigit(long long n) 
-{ 
-    int count = 0; 
-    while (n != 0) { 
-        n = n / 10; 
-        ++count; 
-    } 
-    return count; 
-}
+vector<string> split_string(string);
 
-long sumDigit(long long n) 
+long sumDigit(string n) 
 { 
     long sum = 0; 
-    while (n != 0) {
-        sum += n % 10; 
-        n = n / 10;  
+    for(int i=0;i<n.length();i++){
+        sum+= n[i]-'0';
     } 
     return sum; 
 }
 
-vector<string> split_string(string);
+long superDigitHelper(long n){
+    if(n<10)
+        return n;
+    else{
+        long num=0;
+        while(n>0){
+            num+=n%10;
+            n=n/10;
+        }
+        return superDigitHelper(num);
+    }
+}
 
 // Complete the superDigit function below.
-int superDigit(long long m) {
-
-    int d=countDigit(m);
-    if(d==1){
-        return m;
-    }
-    long s=sumDigit(m);
-    return superDigit(s);
+int superDigit(string n,int k) {
+    long s=sumDigit(n);
+    s=superDigitHelper(s*k);
+    return (int)s;
+    /*int d=n.length();
+    if(d==1)
+        return stoi(n);
+    string s = to_string(sumDigit(n));
+    return superDigit(s);*/
 
 }
 
 int main()
 {
-    
+    ofstream fout(getenv("OUTPUT_PATH"));
+
     string nk_temp;
     getline(cin, nk_temp);
 
     vector<string> nk = split_string(nk_temp);
 
     string n = nk[0];
-
+    
     int k = stoi(nk[1]);
 
-    string n1=n;
+    int result = superDigit(n,k);
 
-    for(int i=0;i<k-1;i++){
-        n+=n1;
-    }
-	
-	for(int i=0;i<n.length();i++){
-		cout<<n[i];
-	}
-	cout<<"\n";
-    long long m=stoll(n);
+    fout << result << "\n";
 
-    int result = superDigit(m);
-
-    cout << result << "\n";
+    fout.close();
 
     return 0;
 }
@@ -95,4 +89,3 @@ vector<string> split_string(string input_string) {
 
     return splits;
 }
-
